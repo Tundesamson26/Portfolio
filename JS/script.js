@@ -1,3 +1,70 @@
+/*----------navigation menu -------------------*/
+(() =>{
+    const hamburgerBtn = document.querySelector(".hamburger-btn"),
+    navMenu = document.querySelector(".nav-menu"),
+    closeNavBtn = navMenu.querySelector(".close-nav-menu");
+
+    hamburgerBtn.addEventListener("click", showNavMenu);
+    closeNavBtn.addEventListener("click", hideNavMenu);
+
+    function showNavMenu(){
+        navMenu.classList.add("open");
+        bodyScrollingToggle();
+    }
+    function hideNavMenu(){
+        navMenu.classList.remove("open");
+        fadeOutEffect();
+        bodyScrollingToggle();
+    }
+    function fadeOutEffect(){
+        document.querySelector(".fade-out-effect").classList.add("active");
+        setTimeout(()=>{
+            document.querySelector(".fade-out-effect").classList.remove("active");
+        },300)
+    }
+    // attach an event hander to document
+    document.addEventListener("click", (event) =>{
+        if(event.target.classList.contains("link-item")){
+            /*---- make sure event.target.hash has a value before overriding default behaviour ----*/
+            if(event.target.hash !==""){
+                // prevent default anchor click behaviour
+                event.preventDefault();
+                const hash = event.target.hash;
+                // deactivate existing active 'section'
+                document.querySelector(".section.active").classList.add("hide");
+                document.querySelector(".section.active").classList.remove("active");
+                // activate new 'section'
+                document.querySelector(hash).classList.add("active");
+                document.querySelector(hash).classList.remove("hide");
+                /* deactivate existing active navigation menu 'link-item' */
+                navMenu.querySelector(".active").classList.add("outer-shadow", "hover-in-shadow");
+                navMenu.querySelector(".active").classList.remove("active", "inner-shadow");
+                /*--- if clicked 'link-item is contained within the navigation menu --- */
+                if(navMenu.classList.contains("open")){
+                  /* activate new active navigation menu 'link-item' */
+                  event.target.classList.add("active", "inner-shadow");
+                  event.target.classList.remove("outer-shadow", "hover-in-shadow");
+                  // hide navigation menu
+                  hideNavMenu();
+                }
+                else{
+                    let navItems = navMenu.querySelectorAll(".link-item");
+                    navItems.forEach((item) =>{
+                        if(hash === item.hash){
+                        /* activate new active navigation menu 'link-item' */
+                           item.classList.add("active", "inner-shadow");
+                           item.classList.remove("outer-shadow", "hover-in-shadow");
+                        }
+                    })
+                    fadeOutEffect();
+                }
+                // add hash (#) to the url
+                window.location.hash = hash;
+            }
+        }
+    })
+})();
+
 /*----about tab ------ */
 (() =>{
       const aboutSection = document.querySelector(".about-section"),
@@ -171,6 +238,68 @@
 
 })();
 
+/*----------Testimonial slider --------------- */
+(() =>{
+    const sliderContainer = document.querySelector(".testi-slider-container"),
+    slides = sliderContainer.querySelectorAll(".testi-item");
+    slideWidth = sliderContainer.offsetWidth,
+    prevBtn = document.querySelector(".testi-slider-nav .prev"),
+    nextBtn = document.querySelector(".testi-slider-nav .next"),
+    activeSlide = sliderContainer.querySelector(".testi-item.active");
+    let slideIndex = Array.from(activeSlide.parentElement.children).indexOf(activeSlide);
+
+    // set width for all slide
+    slides.forEach((slide) => {
+        slide.style.width = slideWidth + "px";
+    })
+    // set width for all slideContainer
+    sliderContainer.style.width = slideWidth * slides.length + "px";
+
+    nextBtn.addEventListener("click", ()=>{
+        if(slideIndex === slides.length-1){
+            slideIndex = 0;
+        }
+        else{
+            slideIndex++;
+        }
+        slider();
+    })
+    prevBtn.addEventListener("click", ()=>{
+        if(slideIndex === 0){
+            slideIndex = slides.length-1;
+        }
+        else{
+            slideIndex--;
+        }
+        slider();
+    })
+    function slider(){
+        // deactivate the existing active 
+        sliderContainer.querySelector(".testi-item.active").classList.remove("active");
+        // activate new active
+        slides[slideIndex].classList.add("active");
+        sliderContainer.style.marginLeft = - (slideWidth * slideIndex) + "px";
+    }
+    slider();
+})();
+
+/*--------- hide all sections expect active ----------- */
+(() =>{
+    const sections = document.querySelectorAll(".section");
+    sections.forEach((section) =>{
+        if(!section.classList.contains("active")){
+            section.classList.add("hide");
+        }
+    })
+})();
+
+// preloader
+window.addEventListener("load", ()=>{
+    document.querySelector(".preloader").classList.add("fade-out");
+    setTimeout(()=>{
+        document.querySelector(".preloader").style.display = "none";
+    },1200)
+})
 
 
 // typing text animation script
