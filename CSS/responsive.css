@@ -81,6 +81,7 @@
     }
     .about-section .timeline .timeline-item:nth-child(even){
         padding-left: 75px;
+        padding-bottom: 30px;
     }
     .about-section .timeline .timeline-item:nth-child(odd) i{
         right: auto;
