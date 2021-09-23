@@ -1198,6 +1198,9 @@ img{
     max-width: 150px;
     display: inline-block;
     width: 100%;
+    height: auto;
+    border-radius: 20px;
+    object-fit: cover;
 }
 .testimonial-section .testi-item span{
     display: block;
